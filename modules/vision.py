@@ -1,5 +1,5 @@
 """
-Vision Module for Wall-E Companion Robot
+Vision Module for Custom AI Rover Platform
 Owner: Sabera
 
 This module handles all input from the OAK-D camera according to the API contract.

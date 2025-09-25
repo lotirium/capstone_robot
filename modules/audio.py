@@ -1,5 +1,5 @@
 """
-Audio Module for Wall-E Companion Robot
+Audio Module for Custom AI Rover Platform
 Owner: Boymirzo
 
 This module handles all audio input and output according to the API contract.
@@ -260,14 +260,14 @@ def get_intelligent_response(prompt: str) -> str:
         
         # TEMPORARY: Simulation mode with predefined responses
         responses = {
-            "hello": "Hello! I'm Wall-E, your companion robot. How can I help you today?",
-            "how are you": "I'm doing great! My systems are running smoothly and I'm ready for adventure!",
-            "follow me": "Of course! I'll follow you. Just start walking and I'll be right behind you.",
-            "stop": "Stopping now! Is everything okay?",
-            "what do you see": "I can see you clearly! I'm also scanning for obstacles to keep us safe.",
-            "who are you": "I'm Wall-E, an AI companion robot built by an amazing team of students!",
-            "thank you": "You're very welcome! I'm happy to help.",
-            "goodbye": "Goodbye! It was great spending time with you. See you soon!"
+            "hello": "Hello! I'm the AI Rover Platform, your autonomous companion. How can I assist you today?",
+            "how are you": "I'm operating at full capacity! All systems are green and ready for mission.",
+            "follow me": "Roger that! I'll engage follow mode and track your position.",
+            "stop": "Stopping all movement immediately! Awaiting further instructions.",
+            "what do you see": "I'm scanning the environment with my vision system and monitoring for obstacles.",
+            "who are you": "I'm a Custom AI Rover Platform built by an amazing engineering team!",
+            "thank you": "You're welcome! I'm here to serve and assist.",
+            "goodbye": "Mission complete! See you next time, commander!"
         }
         
         # Find best matching response

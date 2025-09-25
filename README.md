@@ -1,19 +1,19 @@
-# Project Wall-E: The AI Companion Robot
+# Custom AI Rover Platform
 
-This is the official repository for our Capstone Design project to build an AI-powered companion robot using a Jetson Orin NX. Our goal is to create an interactive robot that can follow people, respond to voice commands, and provide intelligent conversation through advanced AI capabilities.
+This is the official repository for our Capstone Design project to build an AI-powered autonomous rover using a Jetson Orin NX and 4WD UGV chassis. Our goal is to create an intelligent mobile platform that can navigate autonomously, follow people, respond to voice commands, and provide AI-powered interaction capabilities.
 
 ## Project Overview
 
-Wall-E is designed to be a friendly companion robot that combines:
+The Custom AI Rover Platform is designed as a versatile autonomous vehicle that combines:
 - **Computer Vision**: Person detection and obstacle avoidance using OAK-D camera
 - **Natural Language Processing**: Voice recognition and AI-powered responses
-- **Autonomous Movement**: Tank-style locomotion with independent track control
+- **Autonomous Movement**: 4WD UGV chassis with independent wheel control for superior maneuverability
 - **Real-time Processing**: All running on NVIDIA Jetson Orin NX for edge AI computing
 
 ## Hardware Components
 - NVIDIA Jetson Orin NX (main computing unit)
 - OAK-D Camera (depth perception and computer vision)
-- Tank chassis with independent track motors
+- 4WD UGV Chassis with independent motor control
 - Speakers and microphone for audio interaction
 - Various sensors for environmental awareness
 
@@ -28,19 +28,27 @@ Wall-E is designed to be a friendly companion robot that combines:
 This document defines the official functions our software modules will use to communicate with `main.py`.
 
 ### `modules/motor_control.py` (Owner: Dilmurod)
-*This module handles all physical movement.*
+*This module handles all physical movement for the 4WD UGV chassis.*
 
 - **`setup() -> None:`**
-  - Initializes all GPIO pins for motor control.
+  - Initializes all GPIO pins for 4WD motor control.
   - Must be called before any other motor functions.
   - Raises `RuntimeError` if GPIO initialization fails.
 
-- **`move(left_speed: int, right_speed: int) -> None:`**
-  - Sets the speed of each track independently. 
+- **`move(front_left: int, front_right: int, rear_left: int, rear_right: int) -> None:`**
+  - Sets the speed of each wheel independently for maximum maneuverability.
   - Speed is an integer from -100 (full reverse) to 100 (full forward).
-  - `left_speed`: Speed for left track (-100 to 100)
-  - `right_speed`: Speed for right track (-100 to 100)
+  - `front_left`: Speed for front left wheel (-100 to 100)
+  - `front_right`: Speed for front right wheel (-100 to 100)
+  - `rear_left`: Speed for rear left wheel (-100 to 100)
+  - `rear_right`: Speed for rear right wheel (-100 to 100)
   - Raises `ValueError` if speeds are outside valid range.
+
+- **`move_simple(forward_speed: int, turn_speed: int) -> None:`**
+  - Simplified movement control for basic forward/backward and turning.
+  - `forward_speed`: Forward/backward speed (-100 to 100)
+  - `turn_speed`: Turning speed (-100 left to 100 right)
+  - Automatically calculates individual wheel speeds.
 
 - **`stop() -> None:`**
   - Immediately stops all motors.
@@ -135,8 +143,8 @@ def main():
         while True:
             # Check for person and follow
             if vision.is_person_detected():
-                # Simple following logic
-                motor.move(50, 50)  # Move forward
+                # Simple following logic using simplified movement
+                motor.move_simple(50, 0)  # Move forward
             else:
                 motor.stop()
             
@@ -144,6 +152,8 @@ def main():
             distance = vision.get_obstacle_distance()
             if distance < 1.0:  # Too close to obstacle
                 motor.stop()
+                # Turn right to avoid obstacle
+                motor.move_simple(0, 30)
             
             # Listen for voice commands
             command = audio.listen_and_transcribe()

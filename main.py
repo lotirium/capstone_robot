@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Wall-E Companion Robot - Main Program
+Custom AI Rover Platform - Main Program
 Capstone Design Project
 
 This is the main orchestration file that coordinates all modules
@@ -28,14 +28,14 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('wall_e.log'),
+        logging.FileHandler('ai_rover.log'),
         logging.StreamHandler(sys.stdout)
     ]
 )
 logger = logging.getLogger(__name__)
 
-class WallECompanion:
-    """Main class for the Wall-E Companion Robot."""
+class AIRoverPlatform:
+    """Main class for the Custom AI Rover Platform."""
     
     def __init__(self):
         self.running = False
@@ -53,11 +53,11 @@ class WallECompanion:
         
     def initialize_modules(self) -> bool:
         """Initialize all hardware modules."""
-        logger.info("Initializing Wall-E modules...")
+        logger.info("Initializing AI Rover Platform modules...")
         
         try:
-            # Initialize motor control
-            logger.info("Setting up motor control...")
+            # Initialize 4WD motor control
+            logger.info("Setting up 4WD motor control...")
             motor.setup()
             
             # Initialize vision system
@@ -69,7 +69,7 @@ class WallECompanion:
             audio.setup()
             
             self.modules_initialized = True
-            logger.info("All modules initialized successfully!")
+            logger.info("All AI Rover modules initialized successfully!")
             return True
             
         except Exception as e:
@@ -103,16 +103,16 @@ class WallECompanion:
             logger.error(f"Error cleaning up audio system: {e}")
     
     def follow_person_behavior(self):
-        """Implement person-following behavior."""
+        """Implement person-following behavior using 4WD control."""
         if vision.is_person_detected():
             # Simple following logic - move forward when person detected
             distance = vision.get_obstacle_distance()
             
             if distance > 2.0:  # Person is far, move forward
-                motor.move(60, 60)
+                motor.move_simple(60, 0)
                 logger.debug("Person detected - moving forward")
             elif distance > 1.0:  # Person is at good distance, slow approach
-                motor.move(30, 30)
+                motor.move_simple(30, 0)
                 logger.debug("Person detected - slow approach")
             else:  # Too close, stop
                 motor.stop()
@@ -123,7 +123,7 @@ class WallECompanion:
             logger.debug("No person detected - stopping")
     
     def obstacle_avoidance(self):
-        """Basic obstacle avoidance behavior."""
+        """Basic obstacle avoidance behavior using 4WD control."""
         distance = vision.get_obstacle_distance()
         
         if distance < 0.5:  # Very close obstacle
@@ -131,8 +131,8 @@ class WallECompanion:
             logger.warning("Obstacle very close - emergency stop")
             return True  # Signal to stop other behaviors
         elif distance < 1.0:  # Close obstacle
-            # Simple avoidance - turn right
-            motor.move(-30, 30)
+            # Simple avoidance - turn right using 4WD
+            motor.move_simple(0, 30)
             time.sleep(0.5)
             motor.stop()
             logger.info("Obstacle detected - avoiding")
@@ -169,7 +169,7 @@ class WallECompanion:
     
     def run_main_loop(self):
         """Main robot behavior loop."""
-        logger.info("Starting Wall-E main behavior loop...")
+        logger.info("Starting AI Rover Platform main behavior loop...")
         self.running = True
         
         while self.running:
@@ -194,8 +194,8 @@ class WallECompanion:
                 time.sleep(1)  # Longer delay on error
     
     def run(self):
-        """Main entry point for the robot."""
-        logger.info("Starting Wall-E Companion Robot...")
+        """Main entry point for the AI rover."""
+        logger.info("Starting Custom AI Rover Platform...")
         
         # Set up signal handlers
         self.setup_signal_handlers()
@@ -207,7 +207,7 @@ class WallECompanion:
         
         try:
             # Welcome message
-            audio.speak("Hello! Wall-E is ready to be your companion.")
+            audio.speak("Hello! AI Rover Platform is ready for autonomous operation.")
             
             # Run main behavior loop
             self.run_main_loop()
@@ -220,14 +220,14 @@ class WallECompanion:
             # Clean up
             motor.stop()  # Emergency stop
             self.cleanup_modules()
-            logger.info("Wall-E shutdown complete")
+            logger.info("AI Rover Platform shutdown complete")
             
         return 0
 
 def main():
     """Entry point for the program."""
-    robot = WallECompanion()
-    return robot.run()
+    rover = AIRoverPlatform()
+    return rover.run()
 
 if __name__ == "__main__":
     sys.exit(main())
